@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "308160185299",
+    "firebase_url": "https://colam-apps-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "colam-apps",
+    "storage_bucket": "colam-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308160185299:android:f84d12785eb0f6653a2526",
+        "android_client_info": {
+          "package_name": "colman.apps.movie.reviewer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9vGRsYpXpkAdquxe8yHomxAoCftF_Cy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308160185299:android:0e53fa72dd7f65943a2526",
+        "android_client_info": {
+          "package_name": "com.company.MovieReviewerApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9vGRsYpXpkAdquxe8yHomxAoCftF_Cy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308160185299:android:aea999886cf0386b3a2526",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9vGRsYpXpkAdquxe8yHomxAoCftF_Cy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
