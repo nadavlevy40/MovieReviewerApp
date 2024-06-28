@@ -1,7 +1,8 @@
-package com.example.myapplication.unAuthScreens.register
+package com.example.myapplication.ui.unAuthScreens.register
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -21,10 +22,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentRegisterBinding
+import com.example.myapplication.ui.views.ImagePicker
 import com.example.myapplication.utils.BasicAlert
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -39,12 +42,12 @@ class Register : Fragment() {
         fun newInstance() = Register()
     }
 
+    private val REQUEST_STORAGE_PERMISSION: Int = 1
     private val viewModel: RegisterViewModel by viewModels()
     lateinit var loginLink: View
     lateinit var registerButton: Button
-    lateinit var imageView: ImageView
+    lateinit var imageView: ImagePicker
     lateinit var progressBar: ProgressBar
-    private val REQUEST_STORAGE_PERMISSION = 1
     private val imagePicker: ActivityResultLauncher<String> = getImagePicker()
     private val uCropLauncher: ActivityResultLauncher<Intent> = getUCropLauncher()
 
@@ -60,7 +63,7 @@ class Register : Fragment() {
         setupUploadButton(binding)
         setupLoginLink(binding)
         setupRegisterButton(binding)
-        requestStoragePermission()
+        imageView.requestStoragePermission(requireContext(), requireActivity())
 
         return binding.root
     }
@@ -107,6 +110,7 @@ class Register : Fragment() {
 
     private fun onRegisterSuccess() {
         BasicAlert("Success", "You have successfully registered.", requireContext()).show()
+        findNavController().navigate(R.id.action_registerFragment_to_profileFragment)
     }
 
     private fun onRegisterFailure(error: Exception?) {
@@ -147,40 +151,9 @@ class Register : Fragment() {
         progressBar.visibility = View.VISIBLE
     }
 
-    private fun requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_STORAGE_PERMISSION
-            )
-        }
-    }
-
     private fun getImagePicker() =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                val destinationUri = Uri.fromFile(File(requireContext().cacheDir, "cropped"))
-                val options = UCrop.Options()
-                options.setCompressionQuality(80)
-                options.setAspectRatioOptions(0, AspectRatio("1:1", 1f, 1f))
-
-                val cropIntent = UCrop.of(uri, destinationUri)
-                    .withOptions(options)
-                    .getIntent(requireContext())
-                uCropLauncher.launch(cropIntent)
-            }
+            imageView.getImagePicker(uri, uCropLauncher)
         }
 
     private fun getUCropLauncher() =

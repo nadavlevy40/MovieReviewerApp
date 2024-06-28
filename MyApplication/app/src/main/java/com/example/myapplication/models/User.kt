@@ -1,11 +1,11 @@
 package com.example.myapplication.models
 
 data class User(
-    val email: String,
-    val firstName: String,
-    val lastName: String,
-    val imageUri: String? = null,
-    val id: String? = null
+    val email: String? = "",
+    val firstName: String? = "",
+    val lastName: String? ="",
+    var imageUri: String? = "",
+    val id: String? = ""
 ) {
     companion object {
         const val EMAIL_KEY = "email"

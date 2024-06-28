@@ -1,4 +1,4 @@
-package com.example.myapplication.unAuthScreens.login
+package com.example.myapplication.ui.unAuthScreens.login
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.utils.BasicAlert
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
@@ -36,7 +37,9 @@ class Login : Fragment() {
             inflater, R.layout.fragment_login, container, false
         )
         bindViews(binding)
-
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+        }
         setupRegisterLink(binding)
         setupLoginButton(binding)
 
@@ -68,6 +71,7 @@ class Login : Fragment() {
 
     private fun onLoginSuccess() {
         BasicAlert("Success", "You have successfully registered.", requireContext()).show()
+        findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
     }
 
     private fun onLoginFailure(error: Exception?) {

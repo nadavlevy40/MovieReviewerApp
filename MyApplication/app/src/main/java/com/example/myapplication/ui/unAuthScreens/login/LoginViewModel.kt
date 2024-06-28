@@ -1,4 +1,4 @@
-package com.example.myapplication.unAuthScreens.login
+package com.example.myapplication.ui.unAuthScreens.login
 
 import android.util.Log
 import androidx.databinding.ObservableField

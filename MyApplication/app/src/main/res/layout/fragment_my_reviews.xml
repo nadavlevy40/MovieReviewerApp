@@ -8,6 +8,7 @@
         <variable
             name="viewModel"
             type="com.example.myapplication.ui.myreviews.MyReviewsViewModel" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

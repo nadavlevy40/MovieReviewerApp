@@ -1,12 +1,19 @@
 package com.example.myapplication.dal.firebase
 
+import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.myapplication.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.UploadTask.TaskSnapshot
+import kotlinx.coroutines.tasks.await
+import kotlin.math.log
 
 class UserRepository {
     companion object {
@@ -15,7 +22,6 @@ class UserRepository {
     }
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     fun saveUserInDB(user: User): Task<Void> {
@@ -24,8 +30,25 @@ class UserRepository {
             .set(user.json)
     }
 
-    fun saveUserImage(imageUri: String, userId: String): UploadTask {
+    suspend fun saveUserImage(imageUri: String, userId: String): UploadTask {
         val imageRef = storage.reference.child("$IMAGES_REF/$userId")
         return imageRef.putFile(imageUri.toUri())
+    }
+
+    suspend fun getUserById(userId: String): User {
+        val user = db.collection(USERS_COLLECTION)
+            .document(userId)
+            .get()
+            .await()
+            .toObject(User::class.java)
+
+        user?.imageUri = getUserImageUri(userId).await().toString()
+
+        return user!!
+    }
+
+    fun getUserImageUri(userId: String): Task<Uri> {
+        val imageRef = storage.reference.child("$IMAGES_REF/$userId")
+        return imageRef.downloadUrl
     }
 }

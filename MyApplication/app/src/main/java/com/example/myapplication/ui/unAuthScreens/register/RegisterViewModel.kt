@@ -1,4 +1,4 @@
-package com.example.myapplication.unAuthScreens.register
+package com.example.myapplication.ui.unAuthScreens.register
 
 import android.util.Log
 import androidx.databinding.ObservableField
@@ -44,14 +44,20 @@ class RegisterViewModel : ViewModel() {
             return
         }
 
-        createUserConcurrently(onSuccess, onFailure)
+        try {
+            createUserConcurrently(onSuccess, onFailure)
+        } catch (e: Exception) {
+            Log.e("Register", "Error registering user", e)
+            onFailure(e)
+
+        }
     }
 
     private fun createUserConcurrently(
         onSuccess: () -> Unit,
         onFailure: (error: Exception?) -> Unit
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 createAuthUser(email.get()!!, password.get()!!)
                 saveUser(constructUserFromFields())
@@ -88,18 +94,19 @@ class RegisterViewModel : ViewModel() {
     }
 
     private suspend fun createAuthUser(email: String, password: String) {
-        withContext(Dispatchers.IO) {
-            val task = auth.createUserWithEmailAndPassword(email, password).await()
-
-            if (task.user?.uid == null) throw Exception("User not created")
-        }
+        val task = auth.createUserWithEmailAndPassword(email, password).await()
+        if (task.user?.uid == null) throw Exception("User not created")
     }
 
     private suspend fun saveUser(user: User) {
-        withContext(Dispatchers.IO) {
+        try {
             userRepository.saveUserInDB(user).await()
-            userRepository.saveUserImage(user.imageUri!!, user.id!!).await()
+            userRepository.saveUserImage(user.imageUri!!, user.id!!)
+        } catch (e: Exception) {
+            Log.e("Register", "Error saving user", e)
+            throw e
         }
+
 
         Log.i("UserRepository", "User ${user.json} saved in DB")
     }

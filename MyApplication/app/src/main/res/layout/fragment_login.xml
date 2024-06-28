@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".unAuthScreens.login.Login">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.unAuthScreens.login.Login">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.example.myapplication.unAuthScreens.login.LoginViewModel" />
+            type="com.example.myapplication.ui.unAuthScreens.login.LoginViewModel" />
     </data>
 
     <LinearLayout
@@ -17,38 +17,28 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.example.myapplication.ui.views.CustomTextInput
+            android:id="@+id/email"
             android:layout_width="370dp"
             android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:text="@={viewModel.email}"
             app:helperText="@{ viewModel.isEmailValid() ? null : @string/email_error}"
             app:helperTextEnabled="@{!viewModel.isEmailValid()}"
-            app:helperTextTextColor="@color/design_default_color_error">
+            app:helperTextTextColor="@color/design_default_color_error" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:text="@={viewModel.email}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
+        <com.example.myapplication.ui.views.CustomTextInput
+            android:id="@+id/password"
+            endiconMode="password_toggle"
             android:layout_width="370dp"
             android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:text="@={viewModel.password}"
             app:helperText="@{viewModel.isPasswordValid() ? null :@string/password_error}"
             app:helperTextEnabled="@{!viewModel.isPasswordValid()}"
-            app:helperTextTextColor="@color/design_default_color_error">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password"
-                endiconMode="password_toggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:text="@={viewModel.password}" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:helperTextTextColor="@color/design_default_color_error" />
 
 
         <Button
