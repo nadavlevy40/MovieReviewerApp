@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.databinding.FragmentRegisterBinding
 import com.example.myapplication.ui.views.ImagePicker
 import com.example.myapplication.utils.BasicAlert
@@ -42,8 +43,8 @@ class Register : Fragment() {
         fun newInstance() = Register()
     }
 
-    private val REQUEST_STORAGE_PERMISSION: Int = 1
-    private val viewModel: RegisterViewModel by viewModels()
+    private val userRepository: UserRepository by lazy { UserRepository(requireContext()) }
+    private val viewModel: RegisterViewModel by viewModels { RegisterViewModelFactory(userRepository) }
     lateinit var loginLink: View
     lateinit var registerButton: Button
     lateinit var imageView: ImagePicker

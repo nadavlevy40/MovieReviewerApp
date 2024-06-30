@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.dal.firebase.UserRepository
+import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.models.User
 import com.example.myapplication.utils.Validator
 import com.google.firebase.auth.FirebaseAuth
@@ -13,13 +13,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
     val firstName = ObservableField("")
     val lastName = ObservableField("")
     val email = ObservableField("")
     val password = ObservableField("")
     val confirmPassword = ObservableField("")
     val imageUri = ObservableField("")
+
 
     val isFirstNameValid = ObservableField(true)
     val isLastNameValid = ObservableField(true)
@@ -34,7 +35,7 @@ class RegisterViewModel : ViewModel() {
 
     private val validator = Validator()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val userRepository = UserRepository()
+
 
     fun register(onSuccess: () -> Unit, onFailure: (error: Exception?) -> Unit) {
         validateForm()
@@ -84,13 +85,14 @@ class RegisterViewModel : ViewModel() {
     }
 
     private fun constructUserFromFields(): User {
-        return User(
+        val user = User(
             firstName = firstName.get()!!,
             lastName = lastName.get()!!,
             email = email.get()!!,
-            imageUri = imageUri.get()!!,
             id = auth.currentUser!!.uid
         )
+        user.imageUri = imageUri.get()!!
+        return user
     }
 
     private suspend fun createAuthUser(email: String, password: String) {
@@ -100,8 +102,8 @@ class RegisterViewModel : ViewModel() {
 
     private suspend fun saveUser(user: User) {
         try {
-            userRepository.saveUserInDB(user).await()
-            userRepository.saveUserImage(user.imageUri!!, user.id!!)
+            userRepository.saveUserInDB(user)
+            userRepository.saveUserImage(user.imageUri!!, user.id)
         } catch (e: Exception) {
             Log.e("Register", "Error saving user", e)
             throw e

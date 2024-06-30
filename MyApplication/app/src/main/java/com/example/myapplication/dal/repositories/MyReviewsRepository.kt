@@ -1,4 +1,4 @@
-package com.example.myapplication.repositories
+package com.example.myapplication.dal.repositories
 
 import com.example.myapplication.models.Review
 import com.google.firebase.auth.FirebaseAuth

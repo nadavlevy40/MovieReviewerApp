@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.models.Review
-import com.example.myapplication.repositories.MyReviewsRepository
+import com.example.myapplication.dal.repositories.MyReviewsRepository
 import kotlinx.coroutines.launch
 
 class MyReviewsViewModel : ViewModel() {

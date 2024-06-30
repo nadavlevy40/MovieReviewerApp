@@ -1,12 +1,36 @@
 package com.example.myapplication.models
 
+import androidx.core.net.toUri
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import org.jetbrains.annotations.NotNull
+
+@Entity(tableName = "users")
 data class User(
+    @PrimaryKey
+    val id: String = "",
+    @ColumnInfo(name = "email")
     val email: String? = "",
+    @ColumnInfo(name = "first_name")
     val firstName: String? = "",
-    val lastName: String? ="",
-    var imageUri: String? = "",
-    val id: String? = ""
+    @ColumnInfo(name = "last_name")
+    val lastName: String? = ""
 ) {
+
+    var remoteImageUri: String? = ""
+    @ColumnInfo(name = "image_uri")
+    var localImageUri: String? = ""
+
+    var imageUri: String?
+        get() = localImageUri ?: remoteImageUri
+        set(value) {
+            val uri = value?.toUri()
+            if (uri != null && (uri.scheme == "http" || uri.scheme == "https")) remoteImageUri =
+                value
+            else localImageUri = value
+        }
+
     companion object {
         const val EMAIL_KEY = "email"
         const val FIRST_NAME_KEY = "firstName"

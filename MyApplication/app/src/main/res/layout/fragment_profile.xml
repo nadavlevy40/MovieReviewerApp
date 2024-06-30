@@ -57,6 +57,13 @@
             android:backgroundTint="?attr/colorPrimary"
             android:text="@string/save_changes"
             android:textColor="?attr/colorOnPrimary" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_bar"
+            style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
         <Button
             android:id="@+id/logout_button"
             style="@style/Widget.Material3.Button.ElevatedButton"

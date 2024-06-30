@@ -1,12 +1,10 @@
 package com.example.myapplication.ui.authScreens.profile
 
 import android.util.Log
-import androidx.databinding.InverseMethod
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.dal.firebase.UserRepository
+import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.models.User
 import com.example.myapplication.utils.Validator
 import com.google.firebase.auth.FirebaseAuth
@@ -15,8 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class ProfileViewModel : ViewModel() {
-    private val userRepository = UserRepository()
+class ProfileViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val validator = Validator()
 
@@ -27,6 +24,8 @@ class ProfileViewModel : ViewModel() {
     val isFirstNameValid = MutableLiveData(true)
     val isLastNameValid = MutableLiveData(true)
     val isImageUriValid = MutableLiveData(true)
+    val isLoading = MutableLiveData(false)
+
 
     val isFormValid: Boolean
         get() = isFirstNameValid.value!! && isLastNameValid.value!! && isImageUriValid.value!!
@@ -36,10 +35,21 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun fetchUserDetails() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val userId = auth.currentUser?.uid ?: throw Exception("User not logged in")
-            val user = userRepository.getUserById(userId)
-            withContext(Dispatchers.Main) { setUserFields(user) }
+        isLoading.value = true
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val userId = auth.currentUser?.uid ?: throw Exception("User not logged in")
+                    val user = userRepository.getUserById(userId)
+                    withContext(Dispatchers.Main) { setUserFields(user) }
+                } catch (e: Exception) {
+                    Log.e("Profile", "Error fetching user details", e)
+                } finally {
+                    withContext(Dispatchers.Main) { isLoading.value = false }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Profile", "Error fetching user details", e)
         }
     }
 
@@ -66,20 +76,20 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun updateUserConcurrently(
-        onSuccess: () -> Unit,
-        onFailure: (error: Exception?) -> Unit
+        onSuccess: () -> Unit, onFailure: (error: Exception?) -> Unit
     ) {
+        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val user = constructUserFromFields()
-                userRepository.saveUserInDB(user).await()
-                if (user.imageUri != imageUri.value) {
-                    userRepository.saveUserImage(user.imageUri!!, user.id!!)
-                }
+                userRepository.saveUserInDB(user)
+                userRepository.saveUserImage(user.imageUri!!, user.id)
                 withContext(Dispatchers.Main) { onSuccess() }
             } catch (e: Exception) {
                 Log.e("Profile", "Error updating user", e)
                 withContext(Dispatchers.Main) { onFailure(e) }
+            } finally {
+                withContext(Dispatchers.Main) { isLoading.value = false }
             }
         }
     }
@@ -91,12 +101,13 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun constructUserFromFields(): User {
-        return User(
+        val user = User(
             firstName = firstName.value!!,
             lastName = lastName.value!!,
             email = auth.currentUser?.email!!,
-            imageUri = imageUri.value!!,
             id = auth.currentUser!!.uid
         )
+        user.imageUri = imageUri.value!!
+        return user
     }
 }

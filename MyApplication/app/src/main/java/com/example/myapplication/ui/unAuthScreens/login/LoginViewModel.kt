@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.dal.firebase.UserRepository
 import com.example.myapplication.utils.Validator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers

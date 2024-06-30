@@ -71,6 +71,9 @@ dependencies {
     implementation(libs.ucrop)
     implementation(libs.androidx.cardview)
     implementation(libs.glide)
+    implementation(libs.room.runtime)
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 }
 
 kapt {
