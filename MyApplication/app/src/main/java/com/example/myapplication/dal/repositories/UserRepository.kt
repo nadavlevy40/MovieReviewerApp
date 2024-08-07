@@ -5,10 +5,8 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.example.myapplication.dal.room.AppDatabase
 import com.example.myapplication.models.User
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
 
 class UserRepository(private val context: Context) {
@@ -44,11 +42,10 @@ class UserRepository(private val context: Context) {
             .await()
             .toObject(User::class.java)
 
-        user?.imageUri = getUserImageUri(userId).toString()
-        user?.localImageUri = null
+        user?.imageUri = imageRepository.downloadAndCacheImage(imageRepository.getImageRemoteUri(userId), userId)
 
         return user!!
     }
 
-    private suspend fun getUserImageUri(userId: String): Uri = imageRepository.getImageUri(userId)
+    private suspend fun getUserImageUri(userId: String): Uri = imageRepository.getImageRemoteUri(userId)
 }

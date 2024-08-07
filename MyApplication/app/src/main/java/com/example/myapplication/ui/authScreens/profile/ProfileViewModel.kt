@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.dal.repositories.MovieRepository
 import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.models.User
 import com.example.myapplication.utils.Validator

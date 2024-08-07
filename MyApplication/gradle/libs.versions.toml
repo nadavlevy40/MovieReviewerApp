@@ -65,6 +65,7 @@ firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-fires
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+retrofit = { module = "com.squareup.retrofit2:retrofit" }
 room-runtime = { module = "androidx.room:room-runtime" }
 ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 

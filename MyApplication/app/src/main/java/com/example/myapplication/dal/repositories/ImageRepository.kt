@@ -7,9 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.dal.room.AppDatabase
 import com.example.myapplication.models.Image
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ImageRepository(private val context: Context) {
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -26,23 +24,25 @@ class ImageRepository(private val context: Context) {
         localDb.imageDao().insertAll(Image(imageId, imageUri.toString()))
     }
 
-    suspend fun getImageUri(imageId: String): Uri {
+    suspend fun getImageRemoteUri(imageId: String): Uri {
         val imageRef = storage.reference.child("$IMAGES_REF/$imageId")
 
-        return downloadAndCacheImage(imageRef.downloadUrl.await(), imageId).toUri()
+        return imageRef.downloadUrl.await()
     }
 
-    private suspend fun downloadAndCacheImage(uri: Uri, imageId: String): String {
-        return withContext(Dispatchers.IO) {
-            val file = Glide.with(context)
-                .asFile()
-                .load(uri)
-                .submit()
-                .get()
+    fun downloadAndCacheImage(uri: Uri, imageId: String): String {
+        val file = Glide.with(context)
+            .asFile()
+            .load(uri)
+            .submit()
+            .get()
 
-            localDb.imageDao().insertAll(Image(imageId, file.absolutePath))
+        localDb.imageDao().insertAll(Image(imageId, file.absolutePath))
 
-            return@withContext file.absolutePath
-        }
+        return file.absolutePath
+    }
+
+    fun getImageLocalUri(imageId: String): String {
+        return localDb.imageDao().getImageById(imageId).value?.uri ?: ""
     }
 }
