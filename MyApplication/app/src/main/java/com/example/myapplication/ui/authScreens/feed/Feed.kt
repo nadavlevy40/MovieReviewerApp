@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
@@ -16,10 +17,12 @@ import com.example.myapplication.dal.repositories.MovieRepository
 import com.example.myapplication.dal.repositories.ReviewsRepository
 import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.databinding.FragmentFeedBinding
+import com.example.myapplication.ui.authScreens.addNewReview.AddNewReviewArgs
 import com.example.myapplication.ui.components.ReviewCardAdapter
 
 class Feed : Fragment() {
 
+    private val args: FeedArgs by navArgs()
     private lateinit var viewModel: FeedViewModel
     private lateinit var reviewRecyclerView: RecyclerView
 
@@ -30,7 +33,7 @@ class Feed : Fragment() {
         val binding: FragmentFeedBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_feed, container, false
         )
-        viewModel = FeedViewModel(ReviewsRepository(requireContext()))
+        viewModel = FeedViewModel(args.isMyFeed, ReviewsRepository(requireContext()))
         bindViews(binding)
         setupRecyclerView(binding)
         return binding.root

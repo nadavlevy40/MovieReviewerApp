@@ -38,7 +38,7 @@ class Login : Fragment() {
         )
         bindViews(binding)
         if (FirebaseAuth.getInstance().currentUser != null) {
-            findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
         }
         setupRegisterLink(binding)
         setupLoginButton(binding)
@@ -71,7 +71,7 @@ class Login : Fragment() {
 
     private fun onLoginSuccess() {
         BasicAlert("Success", "You have successfully registered.", requireContext()).show()
-        findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
     }
 
     private fun onLoginFailure(error: Exception?) {

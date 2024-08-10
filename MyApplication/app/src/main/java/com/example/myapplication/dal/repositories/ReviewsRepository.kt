@@ -8,6 +8,7 @@ import com.example.myapplication.models.Review
 import com.example.myapplication.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 class ReviewsRepository(private val context: Context) {
@@ -59,25 +60,28 @@ class ReviewsRepository(private val context: Context) {
         imageRepository.uploadImage(imageUri.toUri(), reviewId)
     }
 
-    fun getAllCachedReviews(): LiveData<List<Review>> {
-        return localDb.reviewDao().getAllReviews()
+    fun getAllCachedReviews(isLoggedUserReviews: Boolean): LiveData<List<Review>> {
+        return if (!isLoggedUserReviews) localDb.reviewDao().getAllReviews()
+        else localDb.reviewDao().getAllReviewsOfUser(auth.currentUser!!.uid)
     }
 
-    suspend fun getAllReviews(): List<Review> {
-        val reviews = db.collection("reviews")
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
-            .get()
-            .await()
-            .documents.map { document ->
-                document.toObject(Review::class.java)!!.apply { id = document.id }
-            }
+    suspend fun getAllReviews(isLoggedUserReviews: Boolean): List<Review> {
+        val reviewsRef = db.collection("reviews")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+
+        if (isLoggedUserReviews) reviewsRef.whereEqualTo("userId", auth.currentUser!!.uid)
+
+        val reviews = reviewsRef.get().await().documents.map { document ->
+            document.toObject(Review::class.java)!!.apply { id = document.id }
+        }
 
         localDb.reviewDao().insertAll(*reviews.toTypedArray())
         return reviews
     }
 
     suspend fun getReviewById(reviewId: String): Review {
-        var review = localDb.reviewDao().getReviewById(reviewId).apply { imageUri = imageRepository.getImagePathById(reviewId) }
+        var review = localDb.reviewDao().getReviewById(reviewId)
+            .apply { imageUri = imageRepository.getImagePathById(reviewId) }
 
         if (review != null) return review;
 

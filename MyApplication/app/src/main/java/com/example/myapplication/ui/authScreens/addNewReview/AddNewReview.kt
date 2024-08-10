@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
 import com.example.myapplication.dal.repositories.MovieRepository
@@ -67,6 +68,7 @@ class AddNewReview : Fragment() {
         saveChangesButton.setOnClickListener {
             viewModel.saveReview({
                 BasicAlert("Success", "Review saved successfully", requireContext()).show()
+                findNavController().navigate(R.id.action_addNewReviewFragment_to_feedFragment)
             }, {
                 BasicAlert("Fail", "Failed to save review", requireContext()).show()
             })

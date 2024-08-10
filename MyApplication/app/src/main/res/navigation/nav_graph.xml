@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
+    <action
+        android:id="@+id/any_page_to_my_reviews"
+        app:destination="@id/feedFragment"
+        app:popUpTo="@id/moviesFragment"
+        app:popUpToInclusive="false" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.myapplication.ui.unAuthScreens.login.Login"
@@ -15,8 +20,8 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="false" />
         <action
-            android:id="@+id/action_loginFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_loginFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -29,8 +34,8 @@
             app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="false" />
         <action
-            android:id="@+id/action_registerFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_registerFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -59,12 +64,21 @@
         <argument
             android:name="reviewId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_addNewReviewFragment_to_feedFragment"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/addNewReviewFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.example.myapplication.ui.authScreens.feed.Feed"
         android:label="FeedFragment"
         tools:layout="@layout/fragment_feed">
+        <argument
+            android:name="isMyFeed"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_feedFragment_to_addNewReviewFragment"
             app:destination="@id/addNewReviewFragment"

@@ -38,12 +38,12 @@ class UserRepository(private val context: Context) {
     suspend fun getUserById(userId: String): User {
         var user = localDb.userDao().getUserById(userId)
 
-        if (user != null) return user;
+        if (user != null) return user.apply { imageUri = imageRepository.getImagePathById(userId) };
 
         user = getUserFromFireStore(userId)
         localDb.userDao().insertAll(user)
 
-        return user
+        return user.apply { imageUri = imageRepository.getImagePathById(userId) }
     }
 
     private suspend fun getUserFromFireStore(userId: String): User{

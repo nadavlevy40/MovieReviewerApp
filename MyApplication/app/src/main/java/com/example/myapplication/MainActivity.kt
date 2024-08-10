@@ -39,10 +39,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigationMenu() {
         val navController = getNavController()
         navigationMenu = findViewById(R.id.bottom_navigation)
+        navigationMenu.selectedItemId = R.id.page_2
         FirebaseAuth.getInstance().addAuthStateListener { auth ->
             if (auth.currentUser == null) {
                 navigationMenu.visibility = View.GONE
                 navController.navigate(R.id.loginFragment)
+            } else {
+                navigationMenu.visibility = View.VISIBLE
             }
         }
         navigationMenu.setOnItemSelectedListener { item ->
@@ -59,6 +62,11 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.page_3 -> {
                     navController.navigate(R.id.profileFragment)
+                    true
+                }
+                R.id.page_4 -> {
+                    val action = NavGraphDirections.anyPageToMyReviews(true)
+                    navController.navigate(action)
                     true
                 }
 

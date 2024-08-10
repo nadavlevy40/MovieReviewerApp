@@ -10,8 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FeedViewModel(private val reviewsRepository: ReviewsRepository) : ViewModel() {
-    private val _reviews = reviewsRepository.getAllCachedReviews()
+class FeedViewModel(
+    private val isMyReviews: Boolean,
+    private val reviewsRepository: ReviewsRepository
+) : ViewModel() {
+    private val _reviews = reviewsRepository.getAllCachedReviews(isMyReviews)
     val reviews: LiveData<List<Review>> get() = _reviews
 
     init {
@@ -20,7 +23,7 @@ class FeedViewModel(private val reviewsRepository: ReviewsRepository) : ViewMode
 
     private fun fetchReviews() {
         viewModelScope.launch(Dispatchers.IO) {
-            reviewsRepository.getAllReviews()
+            reviewsRepository.getAllReviews(isMyReviews)
         }
     }
 

@@ -15,4 +15,9 @@
         android:enabled="true"
         android:icon="@drawable/movie_24dp_5f6368_fill0_wght400_grad0_opsz24"
         android:title="@string/feed" />
+    <item
+        android:id="@+id/page_4"
+        android:enabled="true"
+        android:icon="@drawable/movie_24dp_5f6368_fill0_wght400_grad0_opsz24"
+        android:title="@string/my_reviews" />
 </menu>
