@@ -36,12 +36,24 @@ class UserRepository(private val context: Context) {
         imageRepository.uploadImage(imageUri.toUri(), userId)
 
     suspend fun getUserById(userId: String): User {
+        var user = localDb.userDao().getUserById(userId)
+
+        if (user != null) return user;
+
+        user = getUserFromFireStore(userId)
+        localDb.userDao().insertAll(user)
+
+        return user
+    }
+
+    private suspend fun getUserFromFireStore(userId: String): User{
         val user = db.collection(USERS_COLLECTION)
             .document(userId)
             .get()
             .await()
             .toObject(User::class.java)
 
+        user?.id = userId
         user?.imageUri = imageRepository.downloadAndCacheImage(imageRepository.getImageRemoteUri(userId), userId)
 
         return user!!

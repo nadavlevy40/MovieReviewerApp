@@ -45,4 +45,41 @@ class ImageRepository(private val context: Context) {
     fun getImageLocalUri(imageId: String): String {
         return localDb.imageDao().getImageById(imageId).value?.uri ?: ""
     }
+
+    suspend fun getImagePathById(imageId: String): String {
+        val image = localDb.imageDao().getImageById(imageId).value
+
+        if (image != null) return image.uri
+
+        val remoteUri = getImageRemoteUri(imageId)
+        val localPath = downloadAndCacheImage(remoteUri, imageId)
+
+        localDb.imageDao().insertAll(Image(imageId, localPath))
+
+        return localPath
+    }
+
+    suspend fun deleteImage(imageId: String) {
+        val imageRef = storage.reference.child("$IMAGES_REF/$imageId")
+        imageRef.delete().await()
+
+        deleteLocalImage(imageId)
+    }
+
+    private fun deleteLocalImage(imageId: String) {
+        val image = localDb.imageDao().getImageById(imageId).value
+        image?.let {
+            val file = Glide.with(context)
+                .asFile()
+                .load(it.uri)
+                .submit()
+                .get()
+
+            if (file.exists()) {
+                file.delete()
+            }
+
+            localDb.imageDao().deleteImage(imageId)
+        }
+    }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull
 @Entity(tableName = "users")
 data class User(
     @PrimaryKey
-    val id: String = "",
+    var id: String = "",
     @ColumnInfo(name = "email")
     val email: String? = "",
     @ColumnInfo(name = "first_name")

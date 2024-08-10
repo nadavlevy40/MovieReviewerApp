@@ -1,35 +1,44 @@
 package com.example.myapplication.models
 
 import androidx.room.ColumnInfo
+import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "movies")
 data class Movie(
     @PrimaryKey
-    val id: Int,
+    @SerializedName("id")
+    val id: Int = 0,
     @ColumnInfo(name = "title")
-    val title: String,
+    val title: String = "",
+    @SerializedName("poster_path")
     @ColumnInfo(name = "poster_path")
-    val posterPath: String,
+    val posterPath: String = "",
+    @SerializedName("release_date")
     @ColumnInfo(name = "release_date")
-    val releaseDate: String,
+    val releaseDate: String= "",
     @ColumnInfo(name = "overview")
-    val overview: String,
+    val overview: String="",
+    @SerializedName("vote_average")
     @ColumnInfo(name = "vote_average")
-    val voteAverage: Double,
+    val voteAverage: Double=0.0,
     @ColumnInfo(name = "popularity")
     val popularity: Double,
-    @ColumnInfo(name = "genre_ids")
-    val genreIds: List<Int>,
+    @SerializedName("original_language")
     @ColumnInfo(name = "original_language")
     val originalLanguage: String,
+    @SerializedName("original_title")
     @ColumnInfo(name = "original_title")
     val originalTitle: String,
+    @SerializedName("backdrop_path")
     @ColumnInfo(name = "backdrop_path")
     val backdropPath: String,
     @ColumnInfo(name = "adult")
     val adult: Boolean,
     @ColumnInfo(name = "video")
     val video: Boolean,
+    @SerializedName("vote_count")
     @ColumnInfo(name = "vote_count")
     val voteCount: Int
 ) {
@@ -41,7 +50,6 @@ data class Movie(
         const val OVERVIEW_KEY = "overview"
         const val VOTE_AVERAGE_KEY = "voteAverage"
         const val POPULARITY_KEY = "popularity"
-        const val GENRE_IDS_KEY = "genreIds"
         const val ORIGINAL_LANGUAGE_KEY = "originalLanguage"
         const val ORIGINAL_TITLE_KEY = "originalTitle"
         const val BACKDROP_PATH_KEY = "backdropPath"
@@ -57,7 +65,6 @@ data class Movie(
             val overview = json[OVERVIEW_KEY] as? String ?: ""
             val voteAverage = json[VOTE_AVERAGE_KEY] as? Double ?: 0.0
             val popularity = json[POPULARITY_KEY] as? Double ?: 0.0
-            val genreIds = json[GENRE_IDS_KEY] as? List<Int> ?: emptyList()
             val originalLanguage = json[ORIGINAL_LANGUAGE_KEY] as? String ?: ""
             val originalTitle = json[ORIGINAL_TITLE_KEY] as? String ?: ""
             val backdropPath = json[BACKDROP_PATH_KEY] as? String ?: ""
@@ -72,7 +79,6 @@ data class Movie(
                 overview,
                 voteAverage,
                 popularity,
-                genreIds,
                 originalLanguage,
                 originalTitle,
                 backdropPath,
@@ -94,7 +100,6 @@ data class Movie(
                 OVERVIEW_KEY to overview,
                 VOTE_AVERAGE_KEY to voteAverage,
                 POPULARITY_KEY to popularity,
-                GENRE_IDS_KEY to genreIds,
                 ORIGINAL_LANGUAGE_KEY to originalLanguage,
                 ORIGINAL_TITLE_KEY to originalTitle,
                 BACKDROP_PATH_KEY to backdropPath,

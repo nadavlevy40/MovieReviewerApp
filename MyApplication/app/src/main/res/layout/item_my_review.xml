@@ -35,13 +35,13 @@
                 android:text="@{review.content}"
                 android:textAppearance="?attr/textAppearanceBody1" />
 
-            <ImageView
-                android:id="@+id/reviewImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="8dp"
-                android:scaleType="centerCrop"
-                android:src="@{review.imageUrl}" />
+<!--            <ImageView-->
+<!--                android:id="@+id/reviewImage"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"-->
+<!--                android:layout_marginTop="N8dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@{review.imageUrl}" />-->
 
             <TextView
                 android:id="@+id/reviewTimestamp"

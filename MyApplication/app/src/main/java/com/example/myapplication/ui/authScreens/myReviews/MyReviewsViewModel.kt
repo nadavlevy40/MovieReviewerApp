@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.models.Review
-import com.example.myapplication.dal.repositories.MyReviewsRepository
+import com.example.myapplication.dal.repositories.ReviewsRepository
 import kotlinx.coroutines.launch
 
 class MyReviewsViewModel : ViewModel() {
-    private val repository = MyReviewsRepository()
+//    private val repository: ReviewsRepository
 
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> get() = _reviews
@@ -30,8 +30,8 @@ class MyReviewsViewModel : ViewModel() {
     private fun fetchMyReviews() {
         _isLoading.value = true
         viewModelScope.launch {
-            val result = repository.getMyReviews()
-            _reviews.value = result
+//            val result = repository.getMyReviews()
+//            _reviews.value = result
             _isLoading.value = false
         }
     }
@@ -55,7 +55,7 @@ class MyReviewsViewModel : ViewModel() {
     fun deleteReview(review: Review) {
         viewModelScope.launch {
             _isLoading.value = true
-            repository.deleteReview(review)
+//            repository.deleteReview(review)
             fetchMyReviews()
         }
     }

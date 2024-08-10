@@ -6,5 +6,6 @@
         <attr name="helperTextTextColor" format="color" />
         <attr name="helperTextEnabled" format="boolean" />
         <attr name="android:inputType" format="flags" />
+        <attr name="android:lines" format="integer" />
     </declare-styleable>
 </resources>

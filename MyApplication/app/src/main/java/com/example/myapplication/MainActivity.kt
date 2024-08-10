@@ -48,11 +48,16 @@ class MainActivity : AppCompatActivity() {
         navigationMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.page_1 -> {
-                    // Respond to navigation item 1 click
+                    navController.navigate(R.id.moviesFragment)
                     true
                 }
 
                 R.id.page_2 -> {
+                    navController.navigate(R.id.feedFragment)
+                    true
+                }
+
+                R.id.page_3 -> {
                     navController.navigate(R.id.profileFragment)
                     true
                 }

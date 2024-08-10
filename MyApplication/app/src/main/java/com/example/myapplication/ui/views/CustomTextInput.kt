@@ -54,6 +54,11 @@ class CustomTextInput @JvmOverloads constructor(
         set(value) {
             textInputEditText.inputType = value
         }
+    var lines: Int
+        get() = textInputEditText.minLines
+        set(value) {
+            textInputEditText.minLines = value
+        }
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -71,6 +76,7 @@ class CustomTextInput @JvmOverloads constructor(
                 getColor(R.styleable.CustomTextField_helperTextTextColor, Color.RED)
             this@CustomTextInput.inputType =
                 getInt(R.styleable.CustomTextField_android_inputType, 1)
+            this@CustomTextInput.lines = getInt(R.styleable.CustomTextField_android_lines, 1)
         }
     }
 }
