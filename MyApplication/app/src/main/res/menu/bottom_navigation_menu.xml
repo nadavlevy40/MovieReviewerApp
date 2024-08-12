@@ -13,11 +13,11 @@
     <item
         android:id="@+id/page_2"
         android:enabled="true"
-        android:icon="@drawable/movie_24dp_5f6368_fill0_wght400_grad0_opsz24"
+        android:icon="@drawable/feed_icon"
         android:title="@string/feed" />
     <item
         android:id="@+id/page_4"
         android:enabled="true"
-        android:icon="@drawable/movie_24dp_5f6368_fill0_wght400_grad0_opsz24"
+        android:icon="@drawable/my_feed_icon"
         android:title="@string/my_reviews" />
 </menu>

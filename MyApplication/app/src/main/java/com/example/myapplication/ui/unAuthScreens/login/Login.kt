@@ -70,7 +70,6 @@ class Login : Fragment() {
     }
 
     private fun onLoginSuccess() {
-        BasicAlert("Success", "You have successfully registered.", requireContext()).show()
         findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
     }
 

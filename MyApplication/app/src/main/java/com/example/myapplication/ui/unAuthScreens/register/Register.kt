@@ -83,14 +83,11 @@ class Register : Fragment() {
     }
 
     private fun addOnIsImageUriValidChangedCallback() {
-        viewModel.isImageUriValid.addOnPropertyChangedCallback(object :
-            OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (!viewModel.isImageUriValid.get()!!) {
-                    BasicAlert("Invalid Input", "Please upload an image", requireContext()).show()
-                }
+        viewModel.isImageUriValid.observe(viewLifecycleOwner) {
+            if (!viewModel.isImageUriValid.value!!) {
+                BasicAlert("Invalid Input", "Please upload an image", requireContext()).show()
             }
-        })
+        }
     }
 
     private fun setupLoginLink(binding: FragmentRegisterBinding) {
@@ -162,7 +159,7 @@ class Register : Fragment() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = UCrop.getOutput(result.data!!)
                 imageView.setImageURI(uri)
-                viewModel.imageUri.set(uri.toString())
+                viewModel.imageUri.value = uri.toString()
             }
         }
 }

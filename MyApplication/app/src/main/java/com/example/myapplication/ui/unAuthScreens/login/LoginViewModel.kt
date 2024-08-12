@@ -2,6 +2,7 @@ package com.example.myapplication.ui.unAuthScreens.login
 
 import android.util.Log
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.utils.Validator
@@ -12,14 +13,14 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class LoginViewModel : ViewModel() {
-    val email = ObservableField("")
-    val password = ObservableField("")
+    val email = MutableLiveData("")
+    val password = MutableLiveData("")
 
-    val isEmailValid = ObservableField(true)
-    val isPasswordValid = ObservableField(true)
+    val isEmailValid = MutableLiveData(true)
+    val isPasswordValid = MutableLiveData(true)
 
     val isFormValid: Boolean
-        get() = isEmailValid.get()!! && isPasswordValid.get()!!
+        get() = isEmailValid.value!! && isPasswordValid.value!!
     private val validator = Validator()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -40,7 +41,7 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    auth.signInWithEmailAndPassword(email.get()!!, password.get()!!).await()
+                    auth.signInWithEmailAndPassword(email.value!!, password.value!!).await()
                 }
                 withContext(Dispatchers.Main) { onSuccess() }
             } catch (e: Exception) {
@@ -51,7 +52,7 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun validateForm() {
-        isEmailValid.set(validator.validateEmail(email.get()!!))
-        isPasswordValid.set(validator.validatePassword(password.get()!!))
+        isEmailValid.value = validator.validateEmail(email.value!!)
+        isPasswordValid.value = validator.validatePassword(password.value!!)
     }
 }

@@ -17,6 +17,7 @@ import com.example.myapplication.dal.repositories.MovieRepository
 import com.example.myapplication.dal.repositories.ReviewsRepository
 import com.example.myapplication.dal.repositories.UserRepository
 import com.example.myapplication.databinding.FragmentFeedBinding
+import com.example.myapplication.models.Review
 import com.example.myapplication.ui.authScreens.addNewReview.AddNewReviewArgs
 import com.example.myapplication.ui.components.ReviewCardAdapter
 
@@ -33,7 +34,13 @@ class Feed : Fragment() {
         val binding: FragmentFeedBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_feed, container, false
         )
-        viewModel = FeedViewModel(args.isMyFeed, ReviewsRepository(requireContext()))
+        viewModel = FeedViewModel(
+            args.isMyFeed,
+            ReviewsRepository(requireContext()),
+            ImageRepository(requireContext()),
+            UserRepository(requireContext()),
+            MovieRepository(requireContext())
+        )
         bindViews(binding)
         setupRecyclerView(binding)
         return binding.root
@@ -48,13 +55,7 @@ class Feed : Fragment() {
         reviewRecyclerView = binding.root.findViewById(R.id.reviewRecyclerView)
         val layoutManager = LinearLayoutManager(context)
         reviewRecyclerView.layoutManager = layoutManager
-        val reviewAdapter = ReviewCardAdapter(
-            emptyList(),
-            MovieRepository(requireContext()),
-            UserRepository(requireContext()),
-            ImageRepository(requireContext()),
-            viewModel
-        )
+        val reviewAdapter = ReviewCardAdapter(emptyList(), viewModel)
         reviewRecyclerView.adapter = reviewAdapter
 
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->

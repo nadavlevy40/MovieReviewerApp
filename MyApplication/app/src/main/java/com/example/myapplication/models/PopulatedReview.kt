@@ -7,18 +7,16 @@ data class PopulatedReview(
     val title: String = "",
     val content: String = "",
     val timestamp: Long,
-    val movie: Movie
+    val movie: Movie,
+    val imageUri: String = ""
 ) {
-    companion object {
-        fun construct(review: Review, user: User, movie: Movie): PopulatedReview {
-            return PopulatedReview(
-                id = review.id,
-                user = user,
-                title = review.title,
-                content = review.content,
-                timestamp = review.timestamp,
-                movie = movie
-            )
-        }
-    }
+    constructor(review: Review, user: User, movie: Movie) : this(
+        review.id,
+        user,
+        review.title,
+        review.content,
+        review.timestamp,
+        movie,
+        imageUri = review.imageUri ?: ""
+    )
 }
