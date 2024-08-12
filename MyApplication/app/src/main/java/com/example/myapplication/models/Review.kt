@@ -1,20 +1,50 @@
 package com.example.myapplication.models
 
+import androidx.core.net.toUri
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "reviews")
 data class Review(
-    val id: String = "",
+    @PrimaryKey
+    var id: String = "",
+    @ColumnInfo(name = "userId")
     val userId: String = "",
+    @ColumnInfo(name = "title")
     val title: String = "",
+    @ColumnInfo(name = "content")
     val content: String = "",
-    val imageUrl: String = "",
-    val timestamp: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "timestamp")
+    var timestamp: Long,
+    @ColumnInfo(name = "movieId")
+    val movieId: Int = 0
 ) {
+
+    var remoteImageUri: String? = ""
+
+    @ColumnInfo(name = "image_uri")
+    var localImageUri: String? = ""
+
+    var imageUri: String?
+        get() = localImageUri ?: remoteImageUri
+        set(value) {
+            val uri = value?.toUri()
+            if (uri != null && (uri.scheme == "http" || uri.scheme == "https")) remoteImageUri =
+                value
+            else localImageUri = value
+        }
+
+    constructor() : this("", "", "", "", 0, 0)
+
     companion object {
         const val ID_KEY = "id"
         const val USER_ID_KEY = "userId"
         const val TITLE_KEY = "title"
         const val CONTENT_KEY = "content"
-        const val IMAGE_URL_KEY = "imageUrl"
+        const val IMAGE_URI_KEY = "imageUri"
         const val TIMESTAMP_KEY = "timestamp"
+        const val MOVIE_ID_KEY = "movieId"
     }
 
     fun fromJSON(json: Map<String, Any>): Review {
@@ -22,9 +52,12 @@ data class Review(
         val userId = json[USER_ID_KEY] as? String ?: ""
         val title = json[TITLE_KEY] as? String ?: ""
         val content = json[CONTENT_KEY] as? String ?: ""
-        val imageUrl = json[IMAGE_URL_KEY] as? String ?: ""
+        val imageUri = json[IMAGE_URI_KEY] as? String
         val timestamp = json[TIMESTAMP_KEY] as? Long ?: System.currentTimeMillis()
-        return Review(id, userId, title, content, imageUrl, timestamp)
+        val movieId = json[MOVIE_ID_KEY] as? Int ?: 0
+        return Review(id, userId, title, content, timestamp, movieId).apply {
+            this.imageUri = imageUri
+        }
     }
 
     val json: HashMap<String, Any?>
@@ -34,8 +67,9 @@ data class Review(
                 USER_ID_KEY to userId,
                 TITLE_KEY to title,
                 CONTENT_KEY to content,
-                IMAGE_URL_KEY to imageUrl,
-                TIMESTAMP_KEY to timestamp
+                IMAGE_URI_KEY to imageUri,
+                TIMESTAMP_KEY to timestamp,
+                MOVIE_ID_KEY to movieId
             )
         }
 }
