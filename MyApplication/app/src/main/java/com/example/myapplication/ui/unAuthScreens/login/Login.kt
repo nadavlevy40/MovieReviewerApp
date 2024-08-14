@@ -70,7 +70,7 @@ class Login : Fragment() {
     }
 
     private fun onLoginSuccess() {
-        findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
+        BasicAlert("Login", "Login Successful", requireContext()).show()
     }
 
     private fun onLoginFailure(error: Exception?) {

@@ -108,7 +108,9 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
             email = auth.currentUser?.email!!,
             id = auth.currentUser!!.uid
         )
-        user.imageUri = imageUri.value!!
+        user.imageUri =
+            if (!imageUri.value!!.startsWith("file:///")) "file://${imageUri.value!!}"
+            else imageUri.value!!
         return user
     }
 }
