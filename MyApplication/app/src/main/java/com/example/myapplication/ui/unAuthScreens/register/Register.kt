@@ -108,7 +108,6 @@ class Register : Fragment() {
 
     private fun onRegisterSuccess() {
         BasicAlert("Success", "You have successfully registered.", requireContext()).show()
-        findNavController().navigate(R.id.action_registerFragment_to_feedFragment)
     }
 
     private fun onRegisterFailure(error: Exception?) {

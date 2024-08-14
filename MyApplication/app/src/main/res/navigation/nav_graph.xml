@@ -21,7 +21,9 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_loginFragment_to_feedFragment"
-            app:destination="@id/feedFragment" />
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -54,6 +56,21 @@
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.myapplication.ui.authScreens.feed.Feed"
+        android:label="Feed Fragment"
+        tools:layout="@layout/fragment_feed">
+        <argument
+            android:name="isMyFeed"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_feedFragment_to_addNewReviewFragment"
+            app:destination="@id/addNewReviewFragment"
+            app:popUpTo="@id/feedFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
         android:id="@+id/addNewReviewFragment"
         android:name="com.example.myapplication.ui.authScreens.addNewReview.AddNewReview"
         android:label="Add New Review"
@@ -68,21 +85,6 @@
             android:id="@+id/action_addNewReviewFragment_to_feedFragment"
             app:destination="@id/feedFragment"
             app:popUpTo="@id/addNewReviewFragment"
-            app:popUpToInclusive="false" />
-    </fragment>
-    <fragment
-        android:id="@+id/feedFragment"
-        android:name="com.example.myapplication.ui.authScreens.feed.Feed"
-        android:label="FeedFragment"
-        tools:layout="@layout/fragment_feed">
-        <argument
-            android:name="isMyFeed"
-            android:defaultValue="false"
-            app:argType="boolean" />
-        <action
-            android:id="@+id/action_feedFragment_to_addNewReviewFragment"
-            app:destination="@id/addNewReviewFragment"
-            app:popUpTo="@id/feedFragment"
             app:popUpToInclusive="false" />
     </fragment>
 </navigation>
